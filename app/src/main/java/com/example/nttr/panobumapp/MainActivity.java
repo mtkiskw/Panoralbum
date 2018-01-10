@@ -21,7 +21,43 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onPause() {
+        panoWidgetView.pauseRendering();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        panoWidgetView.resumeRendering();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        // Destroy the widget and free memory.
+        panoWidgetView.shutdown();
+        super.onDestroy();
+    }
+
     private void loadImage() {
+        ImageLoaderTask task = backgroundImageLoaderTask;
+        if (task != null && !task.isCancelled()) {
+            // Cancel any task from a previous loading.
+            task.cancel(true);
+        }
+
+        // pass in the name of the image to load from assets.
+        VrPanoramaView.Options viewOptions = new VrPanoramaView.Options();
+        viewOptions.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
+
+        // use the name of the image in the assets/ directory.
+        String panoImageName = "pano.jpg";
+
+        // create the task passing the widget view and call execute to start.
+        task = new ImageLoaderTask(panoWidgetView, viewOptions, panoImageName);
+        task.execute(getAssets());
+        backgroundImageLoaderTask = task;
 
     }
 }
