@@ -18,6 +18,10 @@ android {
     }
 }
 
+repositories {
+    jcenter()
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
@@ -31,4 +35,10 @@ dependencies {
     compile 'com.google.vr:sdk-commonwidget:1.10.0'
     compile 'com.google.vr:sdk-panowidget:1.10.0'
     compile 'com.google.vr:sdk-videowidget:1.10.0'
+    compile 'com.zhihu.android:matisse:0.4.3'
+    compile 'io.reactivex:rxjava:1.2.2'
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.8.2@aar'
+    compile 'io.reactivex:rxjava:1.0.14'
+    compile 'io.reactivex:rxandroid:1.0.1'
+    compile 'com.jakewharton.rxbinding:rxbinding:0.2.0'
 }
