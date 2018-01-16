@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PanobumApp</string>
+    <string name="error_gif">error</string>
 </resources>
