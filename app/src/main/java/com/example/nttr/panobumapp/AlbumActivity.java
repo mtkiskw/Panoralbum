@@ -1,13 +1,16 @@
 package com.example.nttr.panobumapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class AlbumActivity extends AppCompatActivity {
@@ -18,7 +21,11 @@ public class AlbumActivity extends AppCompatActivity {
         setContentView(R.layout.activity_album);
 
         selectedUris = (ArrayList<Uri>)getIntent().getSerializableExtra("selectedUris");
-        showUris(selectedUris);
+        try {
+            showUris(selectedUris);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Button transActivityBtn = (Button) findViewById(R.id.show_album_btn);
         transActivityBtn.setOnClickListener(new View.OnClickListener(){
@@ -31,10 +38,12 @@ public class AlbumActivity extends AppCompatActivity {
         });
     }
 
-    private void showUris(ArrayList<Uri> uris){
+    private void showUris(ArrayList<Uri> uris) throws IOException {
         for(int i=0; i<uris.size(); i++){
             Log.d("URI", uris.get(i).toString());
             Log.d("PATH", uris.get(i).getPath().toString());
+
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uris.get(i));
         }
     }
 
