@@ -58,7 +58,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
         Log.d("LOG", "here");
 
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter = new UriAdapter());
     }
