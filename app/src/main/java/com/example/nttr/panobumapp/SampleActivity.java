@@ -27,12 +27,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
-import com.zhihu.matisse.engine.impl.PicassoEngine;
-import com.zhihu.matisse.ui.MatisseActivity;
+import com.zhihu.matisse.engine.impl.GlideEngine;
 
 import java.util.List;
 
@@ -43,6 +43,9 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
 
     private static final int REQUEST_CODE_CHOOSE = 23;
     private UriAdapter mAdapter;
+
+    // matisse bug
+    public static final String EXTRA_RESULT_SELECTION_PATH = "extra_result_selection_path";
 
 
     @Override
@@ -57,6 +60,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(mAdapter = new UriAdapter());
     }
 
     @Override
@@ -79,13 +83,14 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                                             .theme(R.style.Matisse_Dracula)
                                             .countable(false)
                                             .maxSelectable(9)
-                                            .imageEngine(new PicassoEngine())
+                                            .imageEngine(new GlideEngine())
                                             .forResult(REQUEST_CODE_CHOOSE);
                                     break;
                             }
-//                            mAdapter.setData(null, null);
-
+                        }else {
+                            Toast.makeText(SampleActivity.this, R.string.permission_request_denited, Toast.LENGTH_LONG);
                         }
+                        mAdapter.setData(null, null);
                     }
 
                     @Override
@@ -105,7 +110,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
-            mAdapter.setData(Matisse.obtainResult(data), data.getStringArrayListExtra(MatisseActivity.EXTRA_RESULT_SELECTION));
+            mAdapter.setData(Matisse.obtainResult(data), data.getStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH));
         }
     }
 
@@ -129,10 +134,10 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         public void onBindViewHolder(UriViewHolder holder, int position) {
             holder.mUri.setText(mUris.get(position).toString());
-            holder.mPath.setText(mPaths.get(position));
+//            holder.mPath.setText(mPaths.get(position));
 
             holder.mUri.setAlpha(position % 2 == 0 ? 1.0f : 0.54f);
-            holder.mPath.setAlpha(position % 2 == 0 ? 1.0f : 0.54f);
+//            holder.mPath.setAlpha(position % 2 == 0 ? 1.0f : 0.54f);
         }
 
         @Override
@@ -143,12 +148,12 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
         static class UriViewHolder extends RecyclerView.ViewHolder {
 
             private TextView mUri;
-            private TextView mPath;
+//            private TextView mPath;
 
             UriViewHolder(View contentView) {
                 super(contentView);
                 mUri = (TextView) contentView.findViewById(R.id.uri);
-                mPath = (TextView) contentView.findViewById(R.id.path);
+//                mPath = (TextView) contentView.findViewById(R.id.path);
             }
         }
     }

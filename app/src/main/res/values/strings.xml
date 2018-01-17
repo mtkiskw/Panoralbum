@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">PanobumApp</string>
     <string name="error_gif">error</string>
+    <string name="permission_request_denited">Permission request denied</string>
 </resources>
