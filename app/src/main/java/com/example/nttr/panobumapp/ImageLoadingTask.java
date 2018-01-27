@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 
 import java.lang.ref.WeakReference;
-import java.net.URI;
 
 /**
  * Created by ishikawa on 2018/01/25.
