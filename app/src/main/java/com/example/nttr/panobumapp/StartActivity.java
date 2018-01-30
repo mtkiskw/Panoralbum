@@ -20,13 +20,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import io.realm.Realm;
+
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         findViewById(R.id.create_album_btn).setOnClickListener(this);
+
+        realm = Realm.getDefaultInstance(); // DB open
     }
 
     @Override
@@ -35,6 +40,21 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(StartActivity.this, CreateAlbumActivity.class);
             startActivity(intent);
         }
+        else{
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    Album album = realm.createObject(Album.class, 0);
+                    album.title = "album1";
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        realm.close();
     }
 
 }
