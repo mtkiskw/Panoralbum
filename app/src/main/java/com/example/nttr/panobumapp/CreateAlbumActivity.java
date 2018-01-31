@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,8 @@ import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class CreateAlbumActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -32,6 +36,12 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
     // matisse bug
     public static final String EXTRA_RESULT_SELECTION_PATH = "extra_result_selection_path";
 
+    private Realm realm;
+    private Button create;
+    private Button read;
+    private Button update;
+    private Button delete;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +49,89 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_create_album);
         findViewById(R.id.open_img_folder_btn).setOnClickListener(this);
 
-
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter = new CreateAlbumActivity.UriAdapter());
+
+        realm = Realm.getDefaultInstance(); // DB open
+        create = (Button) findViewById(R.id.create);
+        create.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Number max = realm.where(Album.class).max("id");
+                        long newId = 0;
+                        if(max != null){
+                            newId = max.longValue() + 1;
+                        }
+                        Album album =
+                                realm.createObject(Album.class, newId);
+                        album.title = "album test";
+                        Log.d("Album_", "create");
+                    }
+                });
+
+            }
+        });
+        read = (Button) findViewById(R.id.read);
+        read.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        RealmResults<Album> albums
+                                = realm.where(Album.class).findAll();
+
+                        for (Album album:
+                             albums) {
+                            Log.d("Album_", album.toString());
+                        }
+                    }
+                });
+            }
+        });
+        update = (Button) findViewById(R.id.update);
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Album album = realm.where(Album.class)
+                                .equalTo("id", 0)
+                                .findFirst();
+                        album.title += "<updated>";
+                        Log.d("Album_", album.title);
+                    }
+                });
+            }
+        });
+        delete = (Button) findViewById(R.id.delete);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Album album = realm.where(Album.class)
+                                .equalTo("id", 0)
+                                .findFirst();
+                        album.deleteFromRealm();
+                        Log.d("Album_", "deleted");
+                    }
+                });
+            }
+        });
+
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        realm.close();
     }
 
     @Override

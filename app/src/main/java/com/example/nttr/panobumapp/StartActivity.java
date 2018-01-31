@@ -41,13 +41,6 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
             startActivity(intent);
         }
         else{
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    Album album = realm.createObject(Album.class, 0);
-                    album.title = "album1";
-                }
-            });
         }
     }
 
