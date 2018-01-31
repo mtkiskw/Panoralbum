@@ -70,5 +70,15 @@
         app:layout_constraintStart_toEndOf="@+id/read"
         app:layout_constraintTop_toTopOf="@+id/recyclerview" />
 
+    <EditText
+        android:id="@+id/edit_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="31dp"
+        android:hint="Album Name"
+        app:layout_constraintStart_toStartOf="@+id/open_img_folder_btn"
+        app:layout_constraintTop_toBottomOf="@+id/open_img_folder_btn" />
+
 
 </android.support.constraint.ConstraintLayout>

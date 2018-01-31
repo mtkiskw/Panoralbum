@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +43,8 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
     private Button read;
     private Button update;
     private Button delete;
-
+    private long currentAlbumId = 0;
+    private ArrayList<Uri> currentUris;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter = new CreateAlbumActivity.UriAdapter());
 
+        final EditText editText = (EditText) findViewById(R.id.edit_title);
         realm = Realm.getDefaultInstance(); // DB open
         create = (Button) findViewById(R.id.create);
         create.setOnClickListener(new View.OnClickListener(){
@@ -68,7 +72,15 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
                         }
                         Album album =
                                 realm.createObject(Album.class, newId);
-                        album.title = "album test";
+
+                        String albumTitle = editText.getText().toString();
+                        if(TextUtils.isEmpty(albumTitle)) {
+                            editText.setError("The Album name cannot be empty");
+                            return;
+                        }
+
+                        album.title = editText.getText().toString();
+                        currentAlbumId = newId;
 
                         for(int i=0; i<2; i++) {
                             Number maxImage = realm.where(Image.class).max("id");
@@ -85,7 +97,6 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
                         Log.d("Album_", "create" + album.toString());
                     }
                 });
-
             }
         });
         read = (Button) findViewById(R.id.read);
@@ -195,10 +206,36 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
             mAdapter.setData(Matisse.obtainResult(data), data.getStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH));
+            Log.d("Album_", "this album id is" + currentAlbumId);
 
             Intent intent = new Intent(getApplication(), AlbumActivity.class);
-
             ArrayList<Uri> uris = new ArrayList<>(Matisse.obtainResult(data));
+            currentUris = new ArrayList<>(Matisse.obtainResult(data));
+
+            // TODO: read
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    Album album = realm.where(Album.class)
+                            .equalTo("id", currentAlbumId)
+                            .findFirst();
+                    for (Uri uri:
+                            currentUris) {
+                        String imageUri = uri.toString();
+
+                        Number maxImage = realm.where(Image.class).max("id");
+                        long newImageId = 0;
+                        if (maxImage != null) {
+                            newImageId = maxImage.longValue() + 1;
+                        }
+
+                        Image image = realm.createObject(Image.class, newImageId);
+                        image.uri = imageUri;
+                        album.images.add(image);
+                    }
+                }
+            });
+
             intent.putExtra("selectedUris", uris);
             startActivity(intent);
         }
