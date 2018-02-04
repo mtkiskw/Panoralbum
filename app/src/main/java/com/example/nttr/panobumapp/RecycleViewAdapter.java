@@ -1,5 +1,6 @@
 package com.example.nttr.panobumapp;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +15,26 @@ import java.util.List;
 public class RecycleViewAdapter extends RecyclerView.Adapter<ListViewHolder>{
     private List<RowData> list;
 
-    public RecycleViewAdapter(List<RowData> list) {
+    public RecycleViewAdapter(List<RowData> list)
+    {
         this.list = list;
+    }
+
+    protected void onRecycleViewAdapterClicked(@NonNull RowData version) {
     }
 
     @Override
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent,false);
-        ListViewHolder vh = new ListViewHolder(inflate);
+        final View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.row, parent,false);
+        final ListViewHolder vh = new ListViewHolder(inflate);
+        vh.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final int position = vh.getAdapterPosition();
+                RowData version = list.get(position);
+                onRecycleViewAdapterClicked(version);
+            }
+        });
         return vh;
     }
 

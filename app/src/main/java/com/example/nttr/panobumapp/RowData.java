@@ -7,6 +7,7 @@ package com.example.nttr.panobumapp;
 public class RowData {
     private String title;
     private String detail;
+    private long dataID;
 
     public RowData(){
     }
@@ -19,6 +20,10 @@ public class RowData {
         this.detail = detail;
     }
 
+    public void setID(long id){
+        this.dataID = id;
+    }
+
     public String getTitle(){
         return this.title;
     }
@@ -27,4 +32,7 @@ public class RowData {
         return this.detail;
     }
 
+    public long getDataID(){
+        return this.dataID;
+    }
 }

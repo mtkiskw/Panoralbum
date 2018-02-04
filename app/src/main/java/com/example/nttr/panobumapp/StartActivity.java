@@ -17,6 +17,7 @@ package com.example.nttr.panobumapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,7 +43,17 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
         // test
         RecyclerView rv = (RecyclerView) findViewById(R.id.listRecyclerView);
-        RecycleViewAdapter adapter = new RecycleViewAdapter(this.setAlbumData());
+        RecycleViewAdapter adapter = new RecycleViewAdapter(this.setAlbumData()){
+            @Override
+            protected void onRecycleViewAdapterClicked(@NonNull RowData version) {
+                super.onRecycleViewAdapterClicked(version);
+                // Activity 側でタップされたときの処理を行う
+                long albumID = version.getDataID();
+                Intent intent = new Intent(StartActivity.this, EditAlbumActivity.class);
+                intent.putExtra("selectedAlbumID", albumID);
+                startActivity(intent);
+            }
+        };
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setHasFixedSize(true);
@@ -63,6 +74,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                         RowData data = new RowData();
                         data.setTitle(album.title);
                         data.setDetail("test");
+                        data.setID(album.id);
                         albumDataSet.add(data);
                     }
                 }
