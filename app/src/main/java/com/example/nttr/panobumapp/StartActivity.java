@@ -18,14 +18,20 @@ package com.example.nttr.panobumapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
     private Realm realm;
+    List<RowData> albumDataSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,48 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_start);
         findViewById(R.id.create_album_btn).setOnClickListener(this);
         realm = Realm.getDefaultInstance(); // DB open
+
+        // test
+        RecyclerView rv = (RecyclerView) findViewById(R.id.listRecyclerView);
+        RecycleViewAdapter adapter = new RecycleViewAdapter(this.setAlbumData());
+
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(llm);
+        rv.setAdapter(adapter);
+    }
+
+    private List<RowData> setAlbumData(){
+        albumDataSet = new ArrayList<>();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<Album> albums
+                        = realm.where(Album.class).findAll();
+                if(albums.size() > 0){
+                    for (Album album:
+                            albums) {
+                        RowData data = new RowData();
+                        data.setTitle(album.title);
+                        data.setDetail("test");
+                        albumDataSet.add(data);
+                    }
+                }
+            }
+        });
+        return albumDataSet;
+    }
+    private List<RowData> createDataset() {
+
+        List<RowData> dataset = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            RowData data = new RowData();
+            data.setTitle("カサレアル　太郎" + i + "号");
+            data.setDetail("カサレアル　太郎は" + i + "個の唐揚げが好き");
+
+            dataset.add(data);
+        }
+        return dataset;
     }
 
     @Override
