@@ -16,14 +16,19 @@
 package com.example.nttr.panobumapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,9 +78,20 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                             albums) {
                         RowData data = new RowData();
                         data.setTitle(album.title);
-                        data.setDetail("test");
+                        data.setDetail("more 2 photos");
                         data.setID(album.id);
                         albumDataSet.add(data);
+                    }
+                    ImageView representativeImage = findViewById(R.id.representative_img);
+                    Uri rowDataImgUri = Uri.parse(albums.get(0).images.get(0).toString());
+                    Log.d("LOG", rowDataImgUri.toString());
+                    try{
+                        Bitmap b = MediaStore.Images.Media.getBitmap(getContentResolver(), rowDataImgUri);
+                        representativeImage.setImageBitmap(b);
+                    }
+                    catch (IOException e){
+                        Log.d("LOG", "except");
+
                     }
                 }
             }

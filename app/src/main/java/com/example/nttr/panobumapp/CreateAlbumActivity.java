@@ -89,11 +89,11 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
                             if (maxImage != null) {
                                 newImageId = maxImage.longValue() + 1;
                             }
-
-                            String imageURI = "http://hogehoge.com/" + newImageId;
-                            Image image = realm.createObject(Image.class, newImageId);
-                            image.uri = imageURI;
-                            album.images.add(image);
+//
+//                            String imageURI = "http://hogehoge.com/" + newImageId;
+//                            Image image = realm.createObject(Image.class, newImageId);
+//                            image.uri = imageURI;
+//                            album.images.add(image);
                         }
                         Log.d("Album_", "create" + album.toString());
                     }
@@ -196,18 +196,18 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
                                             album.title = editText.getText().toString();
                                             currentAlbumId = newId;
 
-                                            for(int i=0; i<2; i++) {
-                                                Number maxImage = realm.where(Image.class).max("id");
-                                                long newImageId = 0;
-                                                if (maxImage != null) {
-                                                    newImageId = maxImage.longValue() + 1;
-                                                }
-
-                                                String imageURI = "http://hogehoge.com/" + newImageId;
-                                                Image image = realm.createObject(Image.class, newImageId);
-                                                image.uri = imageURI;
-                                                album.images.add(image);
-                                            }
+//                                            for(int i=0; i<2; i++) {
+//                                                Number maxImage = realm.where(Image.class).max("id");
+//                                                long newImageId = 0;
+//                                                if (maxImage != null) {
+//                                                    newImageId = maxImage.longValue() + 1;
+//                                                }
+//
+////                                                String imageURI = "http://hogehoge.com/" + newImageId;
+////                                                Image image = realm.createObject(Image.class, newImageId);
+////                                                image.uri = imageURI;
+////                                                album.images.add(image);
+//                                            }
                                             Log.d("Album_", "create" + album.toString());
 
                                             Matisse.from(CreateAlbumActivity.this)
