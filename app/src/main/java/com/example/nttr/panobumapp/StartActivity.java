@@ -18,15 +18,21 @@ package com.example.nttr.panobumapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         findViewById(R.id.create_album_btn).setOnClickListener(this);
+        realm = Realm.getDefaultInstance(); // DB open
     }
 
     @Override
@@ -39,9 +45,25 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    private void showAlbumList(){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<Album> albums
+                        = realm.where(Album.class).findAll();
+
+                for (Album album:
+                        albums) {
+                    Log.d("Album_", album.toString());
+                }
+            }
+        });
+    }
+
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        realm.close();
     }
 
 }

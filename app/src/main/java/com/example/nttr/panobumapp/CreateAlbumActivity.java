@@ -51,6 +51,7 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_album);
         findViewById(R.id.open_img_folder_btn).setOnClickListener(this);
+        findViewById(R.id.start_album_btn).setOnClickListener(this);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -173,14 +174,62 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
                         if(aBoolean){
                             switch (v.getId()){
                                 case R.id.open_img_folder_btn:
-                                    Matisse.from(CreateAlbumActivity.this)
-                                            .choose(MimeType.allOf())
-                                            .theme(R.style.Matisse_Dracula)
-                                            .countable(false)
-                                            .maxSelectable(9)
-                                            .imageEngine(new GlideEngine())
-                                            .forResult(REQUEST_CODE_CHOOSE);
+                                    realm.executeTransaction(new Realm.Transaction() {
+                                        @Override
+                                        public void execute(Realm realm) {
+                                            final EditText editText = (EditText) findViewById(R.id.edit_title);
+
+                                            Number max = realm.where(Album.class).max("id");
+                                            long newId = 0;
+                                            if(max != null){
+                                                newId = max.longValue() + 1;
+                                            }
+                                            Album album =
+                                                    realm.createObject(Album.class, newId);
+
+                                            String albumTitle = editText.getText().toString();
+                                            if(TextUtils.isEmpty(albumTitle)) {
+                                                editText.setError("The Album name cannot be empty");
+                                                return;
+                                            }
+
+                                            album.title = editText.getText().toString();
+                                            currentAlbumId = newId;
+
+                                            for(int i=0; i<2; i++) {
+                                                Number maxImage = realm.where(Image.class).max("id");
+                                                long newImageId = 0;
+                                                if (maxImage != null) {
+                                                    newImageId = maxImage.longValue() + 1;
+                                                }
+
+                                                String imageURI = "http://hogehoge.com/" + newImageId;
+                                                Image image = realm.createObject(Image.class, newImageId);
+                                                image.uri = imageURI;
+                                                album.images.add(image);
+                                            }
+                                            Log.d("Album_", "create" + album.toString());
+
+                                            Matisse.from(CreateAlbumActivity.this)
+                                                    .choose(MimeType.allOf())
+                                                    .theme(R.style.Matisse_Dracula)
+                                                    .countable(false)
+                                                    .maxSelectable(9)
+                                                    .imageEngine(new GlideEngine())
+                                                    .forResult(REQUEST_CODE_CHOOSE);
+                                        }
+                                    });
+                                    // TODO: このActivity消す
                                     break;
+                                case R.id.start_album_btn:
+                                    if(currentUris != null){
+                                        Intent intent = new Intent(getApplication(), AlbumActivity.class);
+                                        intent.putExtra("selectedUris", currentUris);
+                                        startActivity(intent);
+                                    }
+                                    else{
+                                        Toast.makeText(CreateAlbumActivity.this, R.string.error_empty_album, Toast.LENGTH_LONG);
+                                    }
                             }
                         }else {
                             Toast.makeText(CreateAlbumActivity.this, R.string.permission_request_denited, Toast.LENGTH_LONG);
@@ -208,11 +257,7 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
             mAdapter.setData(Matisse.obtainResult(data), data.getStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH));
             Log.d("Album_", "this album id is" + currentAlbumId);
 
-            Intent intent = new Intent(getApplication(), AlbumActivity.class);
-            ArrayList<Uri> uris = new ArrayList<>(Matisse.obtainResult(data));
             currentUris = new ArrayList<>(Matisse.obtainResult(data));
-
-            // TODO: read
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
@@ -235,9 +280,6 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
                     }
                 }
             });
-
-            intent.putExtra("selectedUris", uris);
-            startActivity(intent);
         }
 
     }

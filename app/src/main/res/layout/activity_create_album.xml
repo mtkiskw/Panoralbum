@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.nttr.panobumapp.CreateAlbumActivity">
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context="com.example.nttr.panobumapp.CreateAlbumActivity">
 
     <Button
         android:id="@+id/open_img_folder_btn"
@@ -14,7 +14,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
@@ -27,7 +27,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
         android:id="@+id/create"
@@ -39,7 +39,7 @@
         app:layout_constraintEnd_toStartOf="@+id/update"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/recyclerview" />
+        app:layout_constraintTop_toTopOf="@+id/recyclerview"/>
 
     <Button
         android:id="@+id/update"
@@ -49,7 +49,7 @@
         android:text="update"
         app:layout_constraintEnd_toStartOf="@+id/read"
         app:layout_constraintStart_toEndOf="@+id/create"
-        app:layout_constraintTop_toTopOf="@+id/recyclerview" />
+        app:layout_constraintTop_toTopOf="@+id/recyclerview"/>
 
     <Button
         android:id="@+id/read"
@@ -59,7 +59,7 @@
         android:text="read"
         app:layout_constraintEnd_toStartOf="@+id/delete"
         app:layout_constraintStart_toEndOf="@+id/update"
-        app:layout_constraintTop_toTopOf="@+id/recyclerview" />
+        app:layout_constraintTop_toTopOf="@+id/recyclerview"/>
 
     <Button
         android:id="@+id/delete"
@@ -68,7 +68,7 @@
         android:text="delete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/read"
-        app:layout_constraintTop_toTopOf="@+id/recyclerview" />
+        app:layout_constraintTop_toTopOf="@+id/recyclerview"/>
 
     <EditText
         android:id="@+id/edit_title"
@@ -78,7 +78,17 @@
         android:layout_marginTop="31dp"
         android:hint="Album Name"
         app:layout_constraintStart_toStartOf="@+id/open_img_folder_btn"
-        app:layout_constraintTop_toBottomOf="@+id/open_img_folder_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/open_img_folder_btn"/>
 
+    <Button
+        android:id="@+id/start_album_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="69dp"
+        android:text="Start"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_title"
+        />
 
 </android.support.constraint.ConstraintLayout>
