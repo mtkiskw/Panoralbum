@@ -1,5 +1,7 @@
 package com.example.nttr.panobumapp;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by ishikawa on 2018/02/04.
  */
@@ -8,6 +10,7 @@ public class RowData {
     private String title;
     private String detail;
     private long dataID;
+    private Bitmap bitmap;
 
     public RowData(){
     }
@@ -24,6 +27,10 @@ public class RowData {
         this.dataID = id;
     }
 
+    public void setBimapt(Bitmap bitmap){
+        this.bitmap = bitmap;
+    }
+
     public String getTitle(){
         return this.title;
     }
@@ -34,5 +41,9 @@ public class RowData {
 
     public long getDataID(){
         return this.dataID;
+    }
+
+    public Bitmap getBitmap(){
+        return this.bitmap;
     }
 }

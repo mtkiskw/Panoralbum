@@ -14,7 +14,7 @@
             android:id="@+id/representative_img"
             android:layout_width="150dp"
             android:layout_height="match_parent"
-            android:scaleType="fitCenter"
+            android:scaleType="centerCrop"
             android:src="@mipmap/ic_launcher"/>
 
         <LinearLayout
