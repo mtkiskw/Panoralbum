@@ -1,14 +1,19 @@
 package com.example.nttr.panobumapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import io.realm.Realm;
 
-public class EditAlbumActivity extends AppCompatActivity {
+public class EditAlbumActivity extends AppCompatActivity implements View.OnClickListener{
     private Realm realm;
+    private long selectedAlbumID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,9 +21,11 @@ public class EditAlbumActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_album);
 
         Intent intent = getIntent();
-        long albumID = intent.getLongExtra("selectedAlbumID", 0);
+        selectedAlbumID = intent.getLongExtra("selectedAlbumID", 0);
         realm = Realm.getDefaultInstance(); // DB open
-        setAlbumData(albumID);
+        setAlbumData(selectedAlbumID);
+
+        findViewById(R.id.start_album_btn).setOnClickListener(this);
     }
 
     private void setAlbumData(final long albumID){
@@ -37,10 +44,37 @@ public class EditAlbumActivity extends AppCompatActivity {
                     uriText += image.uri;
                     urisView.setText(uriText);
                 }
-
-//                album.title += "<updated>";
             }
         });
+    }
+
+    private ArrayList<Uri> getAlbumUris(final long albumID){
+        final ArrayList<Uri> uris = new ArrayList<>();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Album album = realm.where(Album.class)
+                        .equalTo("id", albumID)
+                        .findFirst();
+                for (Image image:
+                        album.images) {
+                    uris.add(Uri.parse(image.uri));
+                }
+            }
+        });
+        return uris;
+    }
+
+    @Override
+    public void onClick(final View v){
+        switch (v.getId()){
+            case R.id.start_album_btn:
+                Intent intent = new Intent(getApplication(), AlbumActivity.class);
+                ArrayList<Uri> selectedUris = getAlbumUris(selectedAlbumID);
+                intent.putExtra("selectedUris", selectedUris);
+                startActivity(intent);
+                break;
+        }
     }
 
     @Override

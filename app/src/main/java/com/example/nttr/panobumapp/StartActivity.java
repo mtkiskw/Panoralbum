@@ -96,18 +96,6 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         });
         return albumDataSet;
     }
-    private List<RowData> createDataset() {
-
-        List<RowData> dataset = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            RowData data = new RowData();
-            data.setTitle("カサレアル　太郎" + i + "号");
-            data.setDetail("カサレアル　太郎は" + i + "個の唐揚げが好き");
-
-            dataset.add(data);
-        }
-        return dataset;
-    }
 
     @Override
     public void onClick(final View v){
