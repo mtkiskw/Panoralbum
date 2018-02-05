@@ -79,15 +79,14 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                             albums) {
                         RowData data = new RowData();
                         data.setTitle(album.title);
-                        data.setDetail("more 2 photos");
+                        data.setDetail("more 2 photos"); // TODO: show album size
                         data.setID(album.id);
-                        Uri rowDataImgUri = Uri.parse(albums.get(0).images.get(0).uri);
+                        Uri rowDataImgUri = Uri.parse(album.images.get(0).uri);
                         try(InputStream stream = getContentResolver().openInputStream(rowDataImgUri)){
                             Bitmap b = BitmapFactory.decodeStream(new BufferedInputStream(stream));
                             data.setBimapt(b);
                         }
                         catch(IOException e){
-                            Log.d("LOG", "except" + e);
                         }
                         albumDataSet.add(data);
                     }

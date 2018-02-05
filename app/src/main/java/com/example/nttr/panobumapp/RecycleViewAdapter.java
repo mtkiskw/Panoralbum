@@ -43,7 +43,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<ListViewHolder>{
         holder.titleView.setText(list.get(position).getTitle());
         holder.detailView.setText(list.get(position).getDetail());
         holder.imageView.setImageBitmap(list.get(position).getBitmap());
-
     }
 
     @Override
