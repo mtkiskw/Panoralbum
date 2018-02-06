@@ -107,6 +107,10 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    // TODO: uri check
+
+    // TODO: update
+
     private void showAlbumList(){
         realm.executeTransaction(new Realm.Transaction() {
             @Override

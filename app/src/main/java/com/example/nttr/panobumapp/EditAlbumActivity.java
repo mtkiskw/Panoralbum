@@ -35,16 +35,17 @@ public class EditAlbumActivity extends AppCompatActivity implements View.OnClick
         realm = Realm.getDefaultInstance(); // DB open
 
         findViewById(R.id.start_album_btn).setOnClickListener(this);
-        RecyclerView rv = (RecyclerView) findViewById(R.id.listRecyclerView);
+        final RecyclerView rv = (RecyclerView) findViewById(R.id.listRecyclerView);
+
         AlbumRecycleViewAdapter adapter = new AlbumRecycleViewAdapter(this.setAlbumData(selectedAlbumID)){
             @Override
             protected void onAlbumRecycleViewAdapterClicked(@NonNull AlbumRowData version) {
                 super.onAlbumRecycleViewAdapterClicked(version);
                 // Activity 側でタップされたときの処理を行う
-                long albumID = version.getDataID();
-                Intent intent = new Intent(EditAlbumActivity.this, EditAlbumActivity.class);
-                intent.putExtra("selectedAlbumID", albumID);
-                startActivity(intent);
+//                long albumID = version.getDataID();
+//                Intent intent = new Intent(EditAlbumActivity.this, EditAlbumActivity.class);
+//                intent.putExtra("selectedAlbumID", albumID);
+//                startActivity(intent);
             }
         };
 
@@ -52,6 +53,7 @@ public class EditAlbumActivity extends AppCompatActivity implements View.OnClick
         rv.setHasFixedSize(true);
         rv.setLayoutManager(llm);
         rv.setAdapter(adapter);
+
     }
 
     private List<AlbumRowData> setAlbumData(final long albumID){
@@ -99,6 +101,11 @@ public class EditAlbumActivity extends AppCompatActivity implements View.OnClick
         });
         return uris;
     }
+
+    // TODO: update
+    // TODO: add image
+    // TODO: delete image
+    // TODO: uri check
 
     @Override
     public void onClick(final View v){
