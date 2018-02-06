@@ -264,7 +264,10 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
                 }
             });
         }
-
+        Intent intent = new Intent(CreateAlbumActivity.this, EditAlbumActivity.class);
+        intent.putExtra("selectedAlbumID", currentAlbumId);
+        startActivity(intent);
+        // TODO: このActivity消す
     }
 
     private static class UriAdapter extends RecyclerView.Adapter<CreateAlbumActivity.UriAdapter.UriViewHolder> {

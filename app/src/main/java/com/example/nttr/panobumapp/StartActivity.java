@@ -24,7 +24,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import java.io.BufferedInputStream;
@@ -111,20 +110,6 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
     // TODO: update
 
-    private void showAlbumList(){
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                RealmResults<Album> albums
-                        = realm.where(Album.class).findAll();
-
-                for (Album album:
-                        albums) {
-                    Log.d("Album_", album.toString());
-                }
-            }
-        });
-    }
 
     @Override
     protected void onDestroy(){
