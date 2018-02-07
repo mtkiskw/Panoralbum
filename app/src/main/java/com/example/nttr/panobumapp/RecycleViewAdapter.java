@@ -42,7 +42,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<ListViewHolder>{
     @Override
     public void onBindViewHolder(ListViewHolder holder, int position) {
         holder.titleView.setText(list.get(position).getTitle());
-        holder.detailView.setText(list.get(position).getDetail());
+        holder.circleTextView.setText(list.get(position).getDetail());
+        holder.circleTextView.setSolidColor("#000000");
         holder.imageView.setImageBitmap(list.get(position).getBitmap());
     }
 

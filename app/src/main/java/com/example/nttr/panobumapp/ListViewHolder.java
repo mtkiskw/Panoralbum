@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 public class ListViewHolder extends RecyclerView.ViewHolder{
     public TextView titleView;
-    public TextView detailView;
     public ImageView imageView;
+    public CircleTextView circleTextView;
     public ListViewHolder(View itemView) {
         super(itemView);
         titleView = (TextView) itemView.findViewById(R.id.title);
-        detailView = (TextView) itemView.findViewById(R.id.detail);
         imageView = (ImageView) itemView.findViewById(R.id.representative_img);
+        circleTextView = (CircleTextView) itemView.findViewById(R.id.detail);
     }
 
     public void setColorFilterToImg(View itemView){
