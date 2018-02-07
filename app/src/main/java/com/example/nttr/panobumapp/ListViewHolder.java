@@ -1,5 +1,7 @@
 package com.example.nttr.panobumapp;
 
+import android.graphics.Color;
+import android.graphics.LightingColorFilter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,5 +20,10 @@ public class ListViewHolder extends RecyclerView.ViewHolder{
         titleView = (TextView) itemView.findViewById(R.id.title);
         detailView = (TextView) itemView.findViewById(R.id.detail);
         imageView = (ImageView) itemView.findViewById(R.id.representative_img);
+    }
+
+    public void setColorFilterToImg(View itemView){
+        imageView = (ImageView) itemView.findViewById(R.id.representative_img);
+        imageView.setColorFilter(new LightingColorFilter(Color.LTGRAY, 0));
     }
 }

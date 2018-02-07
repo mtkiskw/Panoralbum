@@ -54,8 +54,8 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         RecyclerView rv = (RecyclerView) findViewById(R.id.listRecyclerView);
         RecycleViewAdapter adapter = new RecycleViewAdapter(this.setAlbumData()){
             @Override
-            protected void onRecycleViewAdapterClicked(@NonNull RowData version) {
-                super.onRecycleViewAdapterClicked(version);
+            protected void onRecycleViewAdapterClicked(@NonNull RowData version, ListViewHolder viewHolder) {
+                super.onRecycleViewAdapterClicked(version, viewHolder);
                 // Activity 側でタップされたときの処理を行う
                 long albumID = version.getDataID();
                 Intent intent = new Intent(StartActivity.this, EditAlbumActivity.class);
@@ -131,29 +131,34 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                                         // do something if it exists
                                     } else {
                                         // File was not found
+                                        image.deleteFromRealm();
                                     }
                                 } else {
                                     // Uri was ok but no entry found.
+                                    image.deleteFromRealm();
                                 }
                                 cur.close();
                             } else {
                                 // content Uri was invalid or some other error occurred
+                                image.deleteFromRealm();
                             }
+                        }
+                        if(album.images.size() == 0){
+                            album.deleteFromRealm();
                         }
                     }
                 }
             }
 
         });
-
     }
 
     private void updateView(){
         RecyclerView rv = (RecyclerView) findViewById(R.id.listRecyclerView);
         RecycleViewAdapter adapter = new RecycleViewAdapter(this.setAlbumData()){
             @Override
-            protected void onRecycleViewAdapterClicked(@NonNull RowData version) {
-                super.onRecycleViewAdapterClicked(version);
+            protected void onRecycleViewAdapterClicked(@NonNull RowData version, ListViewHolder viewHolder) {
+                super.onRecycleViewAdapterClicked(version, viewHolder);
                 // Activity 側でタップされたときの処理を行う
                 long albumID = version.getDataID();
                 Intent intent = new Intent(StartActivity.this, EditAlbumActivity.class);

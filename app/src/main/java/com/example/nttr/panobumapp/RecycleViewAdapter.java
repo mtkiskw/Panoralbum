@@ -20,7 +20,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<ListViewHolder>{
         this.list = list;
     }
 
-    protected void onRecycleViewAdapterClicked(@NonNull RowData version) {
+    protected void onRecycleViewAdapterClicked(@NonNull RowData version, ListViewHolder viewHolder) {
+        viewHolder.setColorFilterToImg(viewHolder.itemView);
     }
 
     @Override
@@ -32,7 +33,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<ListViewHolder>{
             public void onClick(View v) {
                 final int position = vh.getAdapterPosition();
                 RowData version = list.get(position);
-                onRecycleViewAdapterClicked(version);
+                onRecycleViewAdapterClicked(version, vh);
             }
         });
         return vh;
