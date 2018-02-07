@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -146,6 +144,7 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
         intent.putExtra("selectedAlbumID", currentAlbumId);
         startActivity(intent);
 
+        // TODO: titleに入力せず戻ると強制終了になる
         finish(); // finish activity
     }
 }
