@@ -46,10 +46,14 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
     private long currentAlbumId = 0;
     private ArrayList<Uri> currentUris;
 
+    private boolean isAppFinish = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_album);
+
+        isAppFinish = true;
         findViewById(R.id.open_img_folder_btn).setOnClickListener(this);
         findViewById(R.id.start_album_btn).setOnClickListener(this);
 
@@ -267,7 +271,8 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
         Intent intent = new Intent(CreateAlbumActivity.this, EditAlbumActivity.class);
         intent.putExtra("selectedAlbumID", currentAlbumId);
         startActivity(intent);
-        // TODO: このActivity消す
+
+        finish(); // finish activity
     }
 
     private static class UriAdapter extends RecyclerView.Adapter<CreateAlbumActivity.UriAdapter.UriViewHolder> {
@@ -313,4 +318,13 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
             }
         }
     }
+
+//    @Override
+//    protected void onResume()
+//    {
+//        super.onResume();
+//        if ( isAppFinish ) {
+//            finish();
+//        }
+//    }
 }

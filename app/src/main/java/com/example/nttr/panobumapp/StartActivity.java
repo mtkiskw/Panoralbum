@@ -108,8 +108,31 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
     // TODO: uri check
 
-    // TODO: update
+    private void updateView(){
+        RecyclerView rv = (RecyclerView) findViewById(R.id.listRecyclerView);
+        RecycleViewAdapter adapter = new RecycleViewAdapter(this.setAlbumData()){
+            @Override
+            protected void onRecycleViewAdapterClicked(@NonNull RowData version) {
+                super.onRecycleViewAdapterClicked(version);
+                // Activity 側でタップされたときの処理を行う
+                long albumID = version.getDataID();
+                Intent intent = new Intent(StartActivity.this, EditAlbumActivity.class);
+                intent.putExtra("selectedAlbumID", albumID);
+                startActivity(intent);
+            }
+        };
 
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(llm);
+        rv.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        updateView();
+    }
 
     @Override
     protected void onDestroy(){
