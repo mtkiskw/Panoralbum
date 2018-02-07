@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -38,9 +37,6 @@ public class CreateAlbumActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_create_album);
 
         findViewById(R.id.open_img_folder_btn).setOnClickListener(this);
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         final EditText editText = (EditText) findViewById(R.id.edit_title);
         realm = Realm.getDefaultInstance(); // DB open
