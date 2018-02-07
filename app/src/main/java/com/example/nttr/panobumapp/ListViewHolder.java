@@ -19,5 +19,4 @@ public class ListViewHolder extends RecyclerView.ViewHolder{
         detailView = (TextView) itemView.findViewById(R.id.detail);
         imageView = (ImageView) itemView.findViewById(R.id.representative_img);
     }
-
 }

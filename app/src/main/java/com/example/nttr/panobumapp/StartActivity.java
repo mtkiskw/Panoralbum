@@ -15,11 +15,14 @@
  */
 package com.example.nttr.panobumapp;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +30,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -102,11 +106,47 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(StartActivity.this, CreateAlbumActivity.class);
             startActivity(intent);
         }
-        else{
-        }
     }
 
     // TODO: uri check
+    private void checkView(){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<Album> albums
+                        = realm.where(Album.class).findAll();
+                if(albums.size() > 0){
+                    for (Album album:
+                            albums) {
+                        for (Image image:
+                             album.images) {
+                            Uri targetImgUri = Uri.parse(image.uri);
+                            ContentResolver cr = getContentResolver();
+                            String[] projection = {MediaStore.MediaColumns.DATA};
+                            Cursor cur = cr.query(targetImgUri, projection, null, null, null);
+                            if (cur != null) {
+                                if (cur.moveToFirst()) {
+                                    String filePath = cur.getString(0);
+                                    if (new File(filePath).exists()) {
+                                        // do something if it exists
+                                    } else {
+                                        // File was not found
+                                    }
+                                } else {
+                                    // Uri was ok but no entry found.
+                                }
+                                cur.close();
+                            } else {
+                                // content Uri was invalid or some other error occurred
+                            }
+                        }
+                    }
+                }
+            }
+
+        });
+
+    }
 
     private void updateView(){
         RecyclerView rv = (RecyclerView) findViewById(R.id.listRecyclerView);
