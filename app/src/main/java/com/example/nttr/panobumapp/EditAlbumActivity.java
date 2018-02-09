@@ -115,7 +115,6 @@ public class EditAlbumActivity extends AppCompatActivity implements View.OnClick
     }
 
     // TODO: update
-    // TODO: add image
     // TODO: delete image
     // TODO: uri check
 

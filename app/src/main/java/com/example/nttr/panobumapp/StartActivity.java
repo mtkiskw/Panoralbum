@@ -27,6 +27,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import java.io.BufferedInputStream;
@@ -68,6 +69,8 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         rv.setHasFixedSize(true);
         rv.setLayoutManager(llm);
         rv.setAdapter(adapter);
+
+        checkView();
     }
 
     private List<RowData> setAlbumData(){
@@ -131,16 +134,21 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                                         // do something if it exists
                                     } else {
                                         // File was not found
+                                        Log.d("LOG", filePath);
+                                        // TODO: bitmap返ってこなかったら、で判断？
                                         image.deleteFromRealm();
                                     }
                                 } else {
                                     // Uri was ok but no entry found.
+                                    Log.d("LOG", "here");
+
                                     image.deleteFromRealm();
+                                    // TODO: 表紙になってなくてもdeleteするとエラーになる
                                 }
                                 cur.close();
                             } else {
                                 // content Uri was invalid or some other error occurred
-                                image.deleteFromRealm();
+//                                image.deleteFromRealm();
                             }
                         }
                         if(album.images.size() == 0){
