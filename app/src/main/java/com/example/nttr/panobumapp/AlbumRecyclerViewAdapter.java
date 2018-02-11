@@ -36,9 +36,7 @@ public class AlbumRecyclerViewAdapter extends RealmRecyclerViewAdapter<Image, Al
     @Override
     public AlbumListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.album_row, parent, false);
-        final AlbumListViewHolder vh = new AlbumListViewHolder(inflate);
-
-        return vh;
+        return new AlbumListViewHolder(inflate);
     }
 
     @Override

@@ -1,9 +1,12 @@
 package com.example.nttr.panobumapp;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +20,7 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +31,6 @@ import io.realm.Realm;
 public class EditAlbumActivity extends AppCompatActivity implements View.OnClickListener {
     private Realm realm;
     private long selectedAlbumID = 0;
-    List<AlbumRowData> albumDataSet;
     private static final int REQUEST_CODE_CHOOSE = 22;
 
     @Override
@@ -49,11 +52,39 @@ public class EditAlbumActivity extends AppCompatActivity implements View.OnClick
             finish();
             return;
         }
+
+        removeLostImageUri(album);
         AlbumRecyclerViewAdapter adapter = new AlbumRecyclerViewAdapter(album.images);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(llm);
         rv.setAdapter(adapter);
+    }
+
+    private void removeLostImageUri(Album album){
+        List<Image> images = new ArrayList<>();
+        for (int i = 0; i < album.images.size(); i++) {
+            Image image = album.images.get(i);
+            Uri uri = Uri.parse(image.uri);
+            ContentResolver cr = getContentResolver();
+            String[] projection = {MediaStore.MediaColumns.DATA};
+            Cursor cur = cr.query(uri, projection, null, null, null);
+            if (cur != null) {
+                if (cur.moveToFirst()) {
+                    String filePath = cur.getString(0);
+                    if (new File(filePath).exists()) {
+                        continue;
+                    }
+                }
+                cur.close();
+            }
+            images.add(image);
+        }
+        realm.executeTransaction(realm -> {
+            for (final Image image : images) {
+                image.deleteFromRealm();
+            }
+        });
     }
 
     @Nullable

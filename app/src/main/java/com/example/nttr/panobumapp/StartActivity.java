@@ -59,7 +59,7 @@ public class StartActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(adapter);
 
-        checkView();
+//        checkView();
     }
 
     // TODO: uri check
