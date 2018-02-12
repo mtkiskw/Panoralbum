@@ -54,7 +54,7 @@ public class EditAlbumActivity extends AppCompatActivity implements View.OnClick
         }
 
         removeLostImageUri(album);
-        AlbumRecyclerViewAdapter adapter = new AlbumRecyclerViewAdapter(album.images);
+        AlbumRecyclerViewAdapter adapter = new AlbumRecyclerViewAdapter(album.images, this);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(llm);
@@ -106,10 +106,7 @@ public class EditAlbumActivity extends AppCompatActivity implements View.OnClick
         });
         return uris;
     }
-
-    // TODO: update
     // TODO: delete image
-    // TODO: uri check
 
     @Override
     public void onClick(final View v) {

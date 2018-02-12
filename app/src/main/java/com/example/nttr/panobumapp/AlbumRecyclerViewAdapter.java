@@ -1,5 +1,8 @@
 package com.example.nttr.panobumapp;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 import io.realm.RealmList;
 import io.realm.RealmRecyclerViewAdapter;
@@ -18,9 +24,11 @@ import io.realm.RealmRecyclerViewAdapter;
 
 public class AlbumRecyclerViewAdapter extends RealmRecyclerViewAdapter<Image, AlbumRecyclerViewAdapter.AlbumListViewHolder> {
     private OnItemClickListener onItemClickListener = null;
+    final private Context context;
 
-    public AlbumRecyclerViewAdapter(RealmList<Image> images) {
+    public AlbumRecyclerViewAdapter(RealmList<Image> images, Context context) {
         super(images, true);
+        this.context = context;
     }
 
     private void setOnItemClickListener(@Nullable OnItemClickListener listener){
@@ -45,8 +53,21 @@ public class AlbumRecyclerViewAdapter extends RealmRecyclerViewAdapter<Image, Al
         if (image == null) {
             throw new IndexOutOfBoundsException("List size is " + getItemCount() + " but position is " + position);
         }
-        Uri.parse(image.uri);
-        holder.imageView.setImageURI(Uri.parse(image.uri));
+        if (image.uri != null) {
+            try (InputStream stream = context.getContentResolver().openInputStream(Uri.parse(image.uri))) {
+                if (stream != null) {
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+                    options.inSampleSize = 4;
+                    options.inJustDecodeBounds = false;
+                    Bitmap bitmap = BitmapFactory.decodeStream(stream, null, options);
+                    holder.imageView.setImageBitmap(bitmap);
+                }
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         holder.itemView.setOnClickListener(v -> onAlbumRecycleViewAdapterClicked(image));
     }
 

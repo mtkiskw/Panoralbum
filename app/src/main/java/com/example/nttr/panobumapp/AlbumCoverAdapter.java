@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -71,7 +70,11 @@ public class AlbumCoverAdapter extends RealmRecyclerViewAdapter<Album, AlbumView
         if (imageUri != null) {
             try (InputStream stream = context.getContentResolver().openInputStream(albumCover.getCoverImageUri())) {
                 if (stream != null) {
-                    Bitmap bitmap = BitmapFactory.decodeStream(new BufferedInputStream(stream));
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+                    options.inSampleSize = 4;
+                    options.inJustDecodeBounds = false;
+                    Bitmap bitmap = BitmapFactory.decodeStream(stream, null, options);
                     holder.imageView.setImageBitmap(bitmap);
                 }
                 return;

@@ -82,4 +82,14 @@ public class AlbumActivity extends AppCompatActivity{
         bitmaps = new ArrayList<>();
         nowPlaying = 0;
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        for (Bitmap bitmap: bitmaps) {
+            if(bitmap != null){
+                bitmap.recycle();
+            }
+        }
+    }
 }
