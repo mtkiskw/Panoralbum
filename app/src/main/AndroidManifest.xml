@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.example.nttr.panobumapp"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.nttr.panobumapp">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".AlbumApplication"
@@ -15,17 +15,18 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".StartActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".SampleActivity"/>
-        <activity android:name=".AlbumActivity"/>
-        <activity android:name=".CreateAlbumActivity"/>
-        <activity android:name=".EditAlbumActivity">
-        </activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".SampleActivity" />
+        <activity android:name=".AlbumActivity" />
+        <activity
+            android:name=".CreateAlbumActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".EditAlbumActivity" />
     </application>
 
 </manifest>

@@ -18,177 +18,96 @@ package com.example.nttr.panobumapp;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class StartActivity extends AppCompatActivity implements View.OnClickListener {
+public class StartActivity extends AppCompatActivity {
     private Realm realm;
-    List<RowData> albumDataSet;
+    private AlbumCoverAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        findViewById(R.id.create_album_btn).setOnClickListener(this);
-        realm = Realm.getDefaultInstance(); // DB open
-
-        // test
-        RecyclerView rv = (RecyclerView) findViewById(R.id.listRecyclerView);
-        RecycleViewAdapter adapter = new RecycleViewAdapter(this.setAlbumData()){
-            @Override
-            protected void onRecycleViewAdapterClicked(@NonNull RowData version, ListViewHolder viewHolder) {
-                super.onRecycleViewAdapterClicked(version, viewHolder);
-                // Activity 側でタップされたときの処理を行う
-                long albumID = version.getDataID();
-                Intent intent = new Intent(StartActivity.this, EditAlbumActivity.class);
-                intent.putExtra("selectedAlbumID", albumID);
-                startActivity(intent);
-            }
-        };
-
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        rv.setHasFixedSize(true);
-        rv.setLayoutManager(llm);
-        rv.setAdapter(adapter);
-
-        checkView();
-    }
-
-    private List<RowData> setAlbumData(){
-        albumDataSet = new ArrayList<>();
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                RealmResults<Album> albums
-                        = realm.where(Album.class).findAll();
-                if(albums.size() > 0){
-                    for (Album album:
-                            albums) {
-                        RowData data = new RowData();
-                        data.setTitle(album.title);
-                        data.setDetail("+" + album.images.size()); // TODO: show album size
-                        data.setID(album.id);
-                        Uri rowDataImgUri = Uri.parse(album.images.get(0).uri);
-                        try(InputStream stream = getContentResolver().openInputStream(rowDataImgUri)){
-                            Bitmap b = BitmapFactory.decodeStream(new BufferedInputStream(stream));
-                            data.setBimapt(b);
-                        }
-                        catch(IOException e){
-                        }
-                        albumDataSet.add(data);
-                    }
-                }
-            }
-
-        });
-        return albumDataSet;
-    }
-
-    @Override
-    public void onClick(final View v){
-        if(v.getId()==R.id.create_album_btn){
+        findViewById(R.id.create_album_btn).setOnClickListener(v -> {
             Intent intent = new Intent(StartActivity.this, CreateAlbumActivity.class);
             startActivity(intent);
-        }
+        });
+        realm = Realm.getDefaultInstance(); // DB open
+
+        RecyclerView rv = findViewById(R.id.listRecyclerView);
+        realm.executeTransaction(realm ->
+                adapter = new AlbumCoverAdapter(realm.where(Album.class).findAll(), this));
+        adapter.setOnItemClickListener((albumCover, viewHolder) -> {
+            long albumID = albumCover.getDataID();
+            Intent intent = new Intent(StartActivity.this, EditAlbumActivity.class);
+            intent.putExtra("selectedAlbumID", albumID);
+            startActivity(intent);
+        });
+
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setAdapter(adapter);
+
+//        checkView();
     }
 
     // TODO: uri check
-    private void checkView(){
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                RealmResults<Album> albums
-                        = realm.where(Album.class).findAll();
-                if(albums.size() > 0){
-                    for (Album album:
-                            albums) {
-                        for (Image image:
-                             album.images) {
-                            Uri targetImgUri = Uri.parse(image.uri);
-                            ContentResolver cr = getContentResolver();
-                            String[] projection = {MediaStore.MediaColumns.DATA};
-                            Cursor cur = cr.query(targetImgUri, projection, null, null, null);
-                            if (cur != null) {
-                                if (cur.moveToFirst()) {
-                                    String filePath = cur.getString(0);
-                                    if (new File(filePath).exists()) {
-                                        // do something if it exists
-                                    } else {
-                                        // File was not found
-                                        Log.d("LOG", filePath);
-                                        // TODO: bitmap返ってこなかったら、で判断？
-                                        image.deleteFromRealm();
-                                    }
-                                } else {
-                                    // Uri was ok but no entry found.
-                                    Log.d("LOG", "here");
+    private void checkView() {
+        realm.executeTransaction(realm -> {
+            RealmResults<Album> albums = realm.where(Album.class).findAll();
+            if (albums.size() <= 0)
+                return;
 
-                                    image.deleteFromRealm();
-                                    // TODO: 表紙になってなくてもdeleteするとエラーになる
-                                }
-                                cur.close();
+            for (Album album : albums) {
+                for (Image image : album.images) {
+                    Uri targetImgUri = Uri.parse(image.uri);
+                    ContentResolver cr = getContentResolver();
+                    String[] projection = {MediaStore.MediaColumns.DATA};
+                    Cursor cur = cr.query(targetImgUri, projection, null, null, null);
+                    if (cur != null) {
+                        if (cur.moveToFirst()) {
+                            String filePath = cur.getString(0);
+                            if (new File(filePath).exists()) {
+                                // do something if it exists
                             } else {
-                                // content Uri was invalid or some other error occurred
-//                                image.deleteFromRealm();
+                                // File was not found
+                                Log.d("LOG", filePath);
+                                // TODO: bitmap返ってこなかったら、で判断？
+                                image.deleteFromRealm();
                             }
+                        } else {
+                            // Uri was ok but no entry found.
+                            Log.d("LOG", "here");
+
+                            image.deleteFromRealm();
+                            // TODO: 表紙になってなくてもdeleteするとエラーになる
                         }
-                        if(album.images.size() == 0){
-                            album.deleteFromRealm();
-                        }
+                        cur.close();
+                    } else {
+                        // content Uri was invalid or some other error occurred
+//                                image.deleteFromRealm();
                     }
                 }
+                if (album.images.size() == 0) {
+                    album.deleteFromRealm();
+                }
             }
-
         });
     }
 
-    private void updateView(){
-        RecyclerView rv = (RecyclerView) findViewById(R.id.listRecyclerView);
-        RecycleViewAdapter adapter = new RecycleViewAdapter(this.setAlbumData()){
-            @Override
-            protected void onRecycleViewAdapterClicked(@NonNull RowData version, ListViewHolder viewHolder) {
-                super.onRecycleViewAdapterClicked(version, viewHolder);
-                // Activity 側でタップされたときの処理を行う
-                long albumID = version.getDataID();
-                Intent intent = new Intent(StartActivity.this, EditAlbumActivity.class);
-                intent.putExtra("selectedAlbumID", albumID);
-                startActivity(intent);
-            }
-        };
-
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        rv.setHasFixedSize(true);
-        rv.setLayoutManager(llm);
-        rv.setAdapter(adapter);
-    }
-
     @Override
-    protected void onResume(){
-        super.onResume();
-        updateView();
-    }
-
-    @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
         realm.close();
     }

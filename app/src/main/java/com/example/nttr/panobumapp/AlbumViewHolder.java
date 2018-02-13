@@ -11,19 +11,20 @@ import android.widget.TextView;
  * Created by ishikawa on 2018/02/04.
  */
 
-public class ListViewHolder extends RecyclerView.ViewHolder{
+public class AlbumViewHolder extends RecyclerView.ViewHolder {
     public TextView titleView;
     public ImageView imageView;
     public CircleTextView circleTextView;
-    public ListViewHolder(View itemView) {
+
+    public AlbumViewHolder(View itemView) {
         super(itemView);
-        titleView = (TextView) itemView.findViewById(R.id.title);
-        imageView = (ImageView) itemView.findViewById(R.id.representative_img);
-        circleTextView = (CircleTextView) itemView.findViewById(R.id.detail);
+        titleView = itemView.findViewById(R.id.title);
+        imageView = itemView.findViewById(R.id.representative_img);
+        circleTextView = itemView.findViewById(R.id.detail);
     }
 
-    public void setColorFilterToImg(View itemView){
-        imageView = (ImageView) itemView.findViewById(R.id.representative_img);
+    public void setColorFilterToImg(View itemView) {
+        imageView = itemView.findViewById(R.id.representative_img);
         imageView.setColorFilter(new LightingColorFilter(Color.LTGRAY, 0));
     }
 }

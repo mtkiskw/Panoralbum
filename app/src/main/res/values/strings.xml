@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">PanobumApp</string>
+    <string name="short_app_name">Panobum</string>
     <string name="error_gif">error</string>
     <string name="permission_request_denited">Permission request denied</string>
     <string name="error_empty_album">Add photo to the album</string>
+    <string name="label_album_name">Album Name</string>
+    <string name="label_select_pics">Select pictures</string>
 </resources>
