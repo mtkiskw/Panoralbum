@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,7 +49,7 @@ public class EditAlbumActivity extends AppCompatActivity implements View.OnClick
 
         Album album = getAlbum(selectedAlbumID);
         if (album == null) {
-            Toast.makeText(this, "該当するアルバムがありません", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.cannot_find_album, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -79,6 +80,11 @@ public class EditAlbumActivity extends AppCompatActivity implements View.OnClick
                 cur.close();
             }
             images.add(image);
+        }
+        if(images.size() == album.images.size()){
+            Toast.makeText(this, R.string.add_photo_to_album, Toast.LENGTH_LONG).show();
+            FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.start_album_btn);
+            floatingActionButton.setVisibility(View.INVISIBLE);
         }
         realm.executeTransaction(realm -> {
             for (final Image image : images) {

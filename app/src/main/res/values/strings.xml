@@ -6,4 +6,6 @@
     <string name="error_empty_album">Add photo to the album</string>
     <string name="label_album_name">Album Name</string>
     <string name="label_select_pics">Select pictures</string>
+    <string name="cannot_find_album">Cannot find album</string>
+    <string name="add_photo_to_album">Add photos to this album</string>
 </resources>

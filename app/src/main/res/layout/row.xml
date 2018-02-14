@@ -44,7 +44,7 @@
         android:layout_weight="0.5"
         android:text="+2"
         android:textColor="#FFFFFF"
-        android:textSize="30dp"
+        android:textSize="20dp"
         app:layout_constraintBottom_toTopOf="@+id/title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.996"
