@@ -72,7 +72,7 @@ public class AlbumActivity extends AppCompatActivity{
             task.cancel(true);
         }
         VrPanoramaView.Options viewOptions = new VrPanoramaView.Options();
-        viewOptions.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
+        viewOptions.inputType = VrPanoramaView.Options.TYPE_MONO;
         task = new ImageLoadingTask(panoWidgetView, viewOptions);
         task.execute(bitmaps.get(index));
         backgroundImageLoaderTask = task;
