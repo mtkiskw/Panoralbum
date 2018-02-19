@@ -65,7 +65,7 @@ public class AlbumCoverAdapter extends RealmRecyclerViewAdapter<Album, AlbumView
         AlbumCover albumCover = album.toAlbumCover();
         holder.titleView.setText(albumCover.getTitle());
         holder.circleTextView.setText(albumCover.getDetail());
-        holder.circleTextView.setSolidColor("#000000");
+        holder.circleTextView.setSolidColor("#696969");
         Uri imageUri = albumCover.getCoverImageUri();
         if (imageUri != null) {
             try (InputStream stream = context.getContentResolver().openInputStream(albumCover.getCoverImageUri())) {

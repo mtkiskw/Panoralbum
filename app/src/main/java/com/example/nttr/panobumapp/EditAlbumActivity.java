@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -43,6 +44,7 @@ public class EditAlbumActivity extends AppCompatActivity implements View.OnClick
         selectedAlbumID = intent.getLongExtra("selectedAlbumID", 0);
         realm = Realm.getDefaultInstance(); // DB open
 
+        TextView titleView = (TextView) findViewById(R.id.selected_album_title);
         findViewById(R.id.start_album_btn).setOnClickListener(this);
         findViewById(R.id.add_img_btn).setOnClickListener(this);
         final RecyclerView rv = findViewById(R.id.listRecyclerView);
@@ -53,6 +55,7 @@ public class EditAlbumActivity extends AppCompatActivity implements View.OnClick
             finish();
             return;
         }
+        titleView.setText(album.title);
 
         removeLostImageUri(album);
         AlbumRecyclerViewAdapter adapter = new AlbumRecyclerViewAdapter(album.images, this);

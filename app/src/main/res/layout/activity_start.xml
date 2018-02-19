@@ -7,6 +7,12 @@
     android:background="#D3D3D3"
     tools:context="com.example.nttr.panobumapp.StartActivity">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dummy_image.png" />
+
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
