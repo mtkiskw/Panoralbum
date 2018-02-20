@@ -84,8 +84,8 @@ public class AlbumActivity extends AppCompatActivity{
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         for (Bitmap bitmap: bitmaps) {
             if(bitmap != null){
                 bitmap.recycle();
